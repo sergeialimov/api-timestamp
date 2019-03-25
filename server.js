@@ -25,7 +25,10 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/:date_string?", function (req, res) {
-  res.json({ greeting: `hello ==== timestamp ${date_string}` });
+  const isInvalid = true;
+  if (isInvalid) {
+    res.json({ "unix": null, "utc" : "Invalid Date" });
+  }
 });
 
 // listen for requests :)
