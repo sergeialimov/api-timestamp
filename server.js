@@ -25,8 +25,16 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/:date_string?", function (req, res) {
-  const isInvalid = true;
-  if (isInvalid) {
+  const date_string = req.params.date_string;
+  const date = new Date('no');
+  // const date = new Date(date_string);
+  // const date = new Date(1479663089000);
+  console.log('---- date_string \n', date_string);
+  console.log('---- date1 \n', date);
+  if (Object.prototype.toString.call(date) === '[object Date]') {
+    console.log('---- date2 \n', date);
+    res.json({ "this is":"working" });
+  } else {
     res.json({ "unix": null, "utc" : "Invalid Date" });
   }
 });
