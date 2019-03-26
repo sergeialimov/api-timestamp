@@ -25,14 +25,22 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/:date_string?", function (req, res) {
-  const date_string = req.params.date_string;
+  let date_string = req.params.date_string;
+
+  // check for empty string
   if (!date_string) {
     const date = new Date();
-    res.json({"unix": date.getTime(), "utc" : date.toUTCString() });
+    res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   }
+
+  // check for unix format
+  if (!date_string.includes('-')) {
+    date_string = parseInt(date_string, 10);
+  }
+
   const date = new Date(date_string);
   if (Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
-    res.json({"unix": date.getTime(), "utc" : date.toUTCString() });
+    res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   } else {
     res.json({ "unix": null, "utc" : "Invalid Date" });
   }
