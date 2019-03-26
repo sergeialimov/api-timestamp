@@ -25,31 +25,29 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/timestamp/:date_string?", function (req, res) {
-  let date_string = req.params.date_string;
+  const date_string = req.params.date_string;
 
   // check for empty string
   if (!date_string) {
     const date = new Date();
-    res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+    return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   }
 
   // handle unix format
-  if (!date_string.includes('-')) {
-    const num = parseInt(date_string, 10);
-    if (num < 8640000000000 && num > 0) {
-      const date = new Date(num);
-      res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
-    } else {
-      res.json({ "unix": null, "utc" : "Invalid Date" });
-    }
+  const num = parseInt(date_string, 10);
+  if (num > 0 && num < 8640000000000) {
+    const date = new Date(num);
+    return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+  } else {
+    return res.json({ "unix": null, "utc" : "Invalid Date" });
   }
 
   // handle UTC format
   const date = new Date(date_string);
   if (Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
-    res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+    return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   } else {
-    res.json({ "unix": null, "utc" : "Invalid Date" });
+    return res.json({ "unix": null, "utc" : "Invalid Date" });
   }
 });
 
