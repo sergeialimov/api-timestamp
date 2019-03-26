@@ -33,22 +33,20 @@ app.get("/api/timestamp/:date_string?", function (req, res) {
     return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
   }
 
-  // handle unix format
-  const num = parseInt(date_string, 10);
-  if (num > 0 && num < 8640000000000) {
-    const date = new Date(num);
-    return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
-  } else {
-    return res.json({ "unix": null, "utc" : "Invalid Date" });
-  }
-
-  // handle UTC format
   const date = new Date(date_string);
+  // handle UTC format
   if (Object.prototype.toString.call(date) === '[object Date]' && !isNaN(date)) {
     return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
-  } else {
-    return res.json({ "unix": null, "utc" : "Invalid Date" });
+    // handle unix format
+  } else if (Object.prototype.toString.call(date) === '[object Date]' && isNaN(date)) {
+    const num = parseInt(date_string, 10);
+    if (num > 0 && num < 8640000000000) {
+      const date = new Date(num);
+      return res.json({ "unix": date.getTime(), "utc" : date.toUTCString() });
+    }
   }
+  // for other cases
+  return res.json({ "unix": null, "utc" : "Invalid Date" });
 });
 
 // listen for requests :)
